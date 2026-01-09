@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Practice Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Practice Page</title>
+
+<!-- jQuery CDN -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+    /* Basic page styling */
+
+    body {
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        /* Main form container */
+        .container {
+            background: #f3b6b6;
+            padding: 25px;
+            width: 100%;
+            max-width: 450px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        /* Heading style */
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        /* Grouping each input */
+        .form-group {
+            margin-bottom: 15px;
+        }
+        /* Label styling */
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }   
+        /* Input and textarea styling */
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }     
+        /* Error message styling */
+        .error {
+            color: red;
+            font-size: 0.9em;
+            display: none;
+        }   
+        /* Submit button styling */
+        button {  
+            width: 100%;
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }     
+        button.enabled {
+          cursor:pointer;
+          opacity:1;
+        }
+         .preview {
+            background: #eef3ff;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 500px) {
+            .container {
+                margin: 10px;
+            }
+        }
+        
+
+
+
+
+       </style>
+</head>
+
+
+
+<body>
+<div class="container">
+
+    <h2>User registration Form</h2>
+
+      <form id="reg form">   <!--take user input and id used by jquery-->
+    
+         <div class="form-group"></div>
+            <label>Full Name</label>
+            <input type="text" id="name" placeholder="Enter your Name">
+            <span class="error" id="nameError">Only alphabets allowed</span>
+        </div>
+
+        <div class="form-group">
+            <label>Address</label>
+            <textarea id="address" rows="3" placeholder="Enter your Address"></textarea>
+            <span class="error" id="addressError">Address is required</span>
+        </div>
+
+        <!-- Mobile Number -->
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="text" id="mobile" placeholder=" Enter 10-digit mobile number">
+            <span class="error" id="mobileError">Enter valid 10-digit number</span>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+            <label>Email ID</label>
+            <input type="email" id="email" placeholder="name@example.com">
+            <span class="error" id="emailError">Enter valid email</span>
+        </div>
+
+        <!-- Gender -->
+        <div class="form-group">
+            <label>Gender</label>
+            <div class="gender">
+                <label><input type="radio" name="gender" value="Male"> Male</label>
+                <label><input type="radio" name="gender" value="Female"> Female</label>
+                <label><input type="radio" name="gender" value="Others"> Others</label>
+            </div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="form-group">
+            <label>Date of Birth</label>
+            <input type="date" id="dob">
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="submitBtn">Submit</button>
+       
+       
+        <div class="preview" id="previewBox">
+        <h3>Preview Details</h3>
+        <p id="previewData"></p>
+    </div>
+    <script>
+       $(document).ready(function(){
+
+    /* Function to validate all form fields */
+    function validateForm() {
+        let valid = true;
+
+        // Fetch input values
+        let name = $("#name").val();
+        let address = $("#address").val();
+        let mobile = $("#mobile").val();
+        let email = $("#email").val();
+
+        // Regular expressions
+        let nameRegex = /^[A-Za-z ]+$/;
+        let mobileRegex = /^[0-9]{10}$/;
+        let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Name validation
+        if (!nameRegex.test(name)) {
+            $("#nameError").show();
+            valid = false;
+        } else $("#nameError").hide();
+
+        // Address validation
+        if (address === "") {
+            $("#addressError").show();
+            valid = false;
+        } else $("#addressError").hide();
+
+        // Mobile validation
+        if (!mobileRegex.test(mobile)) {
+            $("#mobileError").show();
+            valid = false;
+        } else $("#mobileError").hide();
+
+        // Email validation
+        if (!emailRegex.test(email)) {
+            $("#emailError").show();
+            valid = false;
+        } else $("#emailError").hide();
+
+        // Enable submit button only if form is valid
+        if (valid) {
+            $("#submitBtn").addClass("enabled")
+                           .prop("disabled", false)
+                           .css("cursor","pointer");
+        } else {
+            $("#submitBtn").removeClass("enabled")
+                           .prop("disabled", true);
+        }
+    }
+
+    /* Validate on every input change */
+    $("input, textarea").on("input change", validateForm);
+
+    /* Initially disable submit button */
+    $("#submitBtn").prop("disabled", true);
+
+    /* Form submission */
+    $("#regForm").submit(function(e){
+        e.preventDefault(); // Prevent page reload
+
+        // Collect user data
+        let userData = {
+            name: $("#name").val(),
+            address: $("#address").val(),
+            mobile: $("#mobile").val(),
+            email: $("#email").val(),
+            gender: $("input[name='gender']:checked").val(),
+            dob: $("#dob").val()
+        };
+
+        // Store data in localStorage
+        localStorage.setItem("userData", JSON.stringify(userData));
+
+        // Display preview
+        $("#previewData").html(`
+            <strong>Name:</strong> ${userData.name}<br>
+            <strong>Address:</strong> ${userData.address}<br>
+            <strong>Mobile:</strong> ${userData.mobile}<br>
+            <strong>Email:</strong> ${userData.email}<br>
+            <strong>Gender:</strong> ${userData.gender}<br>
+            <strong>DOB:</strong> ${userData.dob}
+        `);
+
+        $("#previewBox").fadeIn();
+
+        alert("Data saved in localStorage successfully!");
+    });
+});
+</script>
+</body>
+</html>
+
+  
+
+
+
+
+
+
+
+
