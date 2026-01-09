@@ -24,5 +24,3 @@ It collects basic user details such as name, address, contact information, gende
 
 ---
 
-## 📂 Project Structure
-
